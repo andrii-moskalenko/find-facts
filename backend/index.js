@@ -8,6 +8,11 @@ const express = require('express')
 const app = express()
 const port = 3000
 
+app.use(express.static(__dirname + '/dist/find-facts'));
+app.get('/*', function(req,res) {
+  res.sendFile(path.join(__dirname+
+    '/dist/find-facts/index.html'));});
+
 
 const scrapeMetatags = (text) => {
 
