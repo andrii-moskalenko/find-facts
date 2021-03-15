@@ -28,6 +28,7 @@
     "express": "^4.17.1",
     "cheerio": "^1.0.0-rc.3",
     "cors": "^2.8.5",
+    "path": "^0.12.7",
     "get-urls": "^9.1.0",
     "node-fetch": "^2.6.0",
     "typescript": "~3.8.3"
