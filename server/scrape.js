@@ -53,6 +53,7 @@ const scrapeNews = async (urls) => {
 
             return {
                 title: $('header h1').text(),
+                img: $('.article-hero__main img').attr('src'),
                 text,
                 events
             }
