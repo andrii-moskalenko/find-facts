@@ -1,0 +1,4 @@
+<h2>Recent political events</h2>
+<div *ngFor="let article of news | async" class="news-list">
+    <a routerLink="article" [queryParams]="{title: article.title}">{{article.title}}</a>
+</div>

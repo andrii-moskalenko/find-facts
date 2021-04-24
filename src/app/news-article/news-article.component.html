@@ -1,0 +1,13 @@
+<article *ngIf="article | async as article">
+    <h3>{{article.title}}</h3>
+
+    <div>{{article.text}}</div>
+
+    <div class="news-events">
+        <div class="events-label">Events:</div>
+        <div *ngFor="let event of article.events" class="event">
+            {{event}}
+        </div>
+    </div>
+
+</article>

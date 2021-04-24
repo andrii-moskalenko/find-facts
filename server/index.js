@@ -1,7 +1,7 @@
 const express = require('express');
 const path = require('path');
 const cors = require('cors');
-
+const url = require('url');
 const app = express();
 app.use(express.static('dist/find-facts'));
 app.use(cors());
@@ -35,12 +35,17 @@ app.get('/news', (req, res) => {
     .then(data => res.json(data))
 })
 
+app.get('/news/article', (req, res) => {
+    scrapeData()
+    .then(data => res.json(getArticle(req, data)))
+})
+
 app.get('/events', (req, res) => {
     scrapeData()
     .then(data => res.send(extractEvents(data)))
 })
 
-app.get('/*', function(req,res) {
+app.get('/*', function(req, res) {
   res.sendFile(path.join(__dirname+
     '/dist/find-facts/index.html'));});
 app.listen(process.env.PORT || 8080);
@@ -67,6 +72,11 @@ async function scrapeData() {
         const newsResponse = await scrapeNews(linksResponse);
         return newsResponse;
     }
+}
+
+function getArticle(req, data) {
+  const queryParams = url.parse(req.url, true).query;
+  return data.find(article => article.title.trim() === queryParams.title.trim());
 }
 
 // 1. getBBC

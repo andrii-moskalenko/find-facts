@@ -3,14 +3,22 @@ import { NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
 import { HttpClientModule } from '@angular/common/http';
+import { NewsArticleComponent } from './news-article/news-article.component';
+import { AppRoutingModule } from './app.routing';
+import { NewsListComponent } from './news-list/news-list.component';
+import { EventsListComponent } from './events-list/events-list.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    NewsArticleComponent,
+    NewsListComponent,
+    EventsListComponent
   ],
   imports: [
     BrowserModule,
-    HttpClientModule
+    HttpClientModule,
+    AppRoutingModule
   ],
   providers: [],
   bootstrap: [AppComponent]
