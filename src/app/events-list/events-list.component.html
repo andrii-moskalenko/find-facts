@@ -1,4 +1,16 @@
-<h2>Recent news</h2>
-<div *ngFor="let event of events | async" class="events-list">
-    <div class="event">{{event}}</div>
+<input [(ngModel)]="searchValue" (ngModelChange)="searchChanged($event)" type="text">
+<div class="content">
+    <div class="events">
+        <div *ngFor="let event of events" (click)="getNewsByEvent(event)" class="events-list">
+            <div [ngClass]="{ 'active': aciveItem === event }" class="event">{{event}}</div>
+        </div>
+    </div>
+    <div class="articles">
+        <div class="article-title" *ngIf="articles | async">Related articles</div>
+        <div *ngFor="let article of articles | async" routerLink="/article" [queryParams]="{title: article.title}" class="article">
+            <img [src]="article.img || fallback" alt="">
+            <a>{{article.title}}</a>
+        </div>
+    </div>
 </div>
+

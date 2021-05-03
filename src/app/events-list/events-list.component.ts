@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
+import { INews } from '../app.consts';
 import { AppService } from '../app.service';
 
 @Component({
@@ -9,11 +10,28 @@ import { AppService } from '../app.service';
 })
 export class EventsListComponent implements OnInit {
 
-  events: Observable<any>;
+  searchValue: string;
+  aciveItem: string;
+  articles: Observable<INews[]>;
+
+  events: Array<string>;
+  eventsCache: Array<string>;
+  fallback = this.appService.fallbackPicture;
+
   constructor(private appService: AppService) { }
 
   ngOnInit(): void {
-    this.events = this.appService.getEvents();
+    this.appService.getEvents()
+      .subscribe(res => this.events = this.eventsCache = res);
+  }
+
+  searchChanged(value) {
+    this.events = this.eventsCache.filter(event => event.includes(value));
+  }
+
+  getNewsByEvent(event) {
+    this.aciveItem = event;
+    this.articles = this.appService.getNewsByEvent(event);
   }
 
 }

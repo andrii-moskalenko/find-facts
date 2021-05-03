@@ -6,7 +6,7 @@ const app = express();
 app.use(express.static('dist/find-facts'));
 app.use(cors());
 app.disable('etag');
-
+app.use(express.json()) 
 const scrapeModule = require('./scrape.js');
 const scrapeLinks = scrapeModule.scrapeLinks;
 const scrapeNews = scrapeModule.scrapeNews;
@@ -45,6 +45,11 @@ app.get('/events', (req, res) => {
     .then(data => res.send(extractEvents(data)))
 })
 
+app.post('/news/related', (req, res) => {
+    scrapeData()
+    .then(data => res.json(getArticlesByEvent(data, req.body.body)))
+})
+
 app.get('/*', function(req, res) {
   res.sendFile(path.join(__dirname+
     '/dist/find-facts/index.html'));});
@@ -57,6 +62,12 @@ function extractEvents(news) {
         events = events.concat(item.events);
     });
     return events;
+}
+
+function getArticlesByEvent(news, event) {
+    return news.filter(article => 
+        article.events.some(articleEvent => articleEvent.trim() === event.trim())
+    )
 }
 
 async function scrapeData() {

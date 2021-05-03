@@ -7,6 +7,7 @@ import { NewsArticleComponent } from './news-article/news-article.component';
 import { AppRoutingModule } from './app.routing';
 import { NewsListComponent } from './news-list/news-list.component';
 import { EventsListComponent } from './events-list/events-list.component';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { EventsListComponent } from './events-list/events-list.component';
   imports: [
     BrowserModule,
     HttpClientModule,
-    AppRoutingModule
+    AppRoutingModule,
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
