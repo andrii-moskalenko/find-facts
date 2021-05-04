@@ -55,7 +55,7 @@ const scrapeNews = async (urls) => {
                 title: $('header h1').text(),
                 img: $('.article-hero__main img').attr('src'),
                 text,
-                events
+                events: filterMistakes(events)
             }
         });
           
@@ -63,6 +63,12 @@ const scrapeNews = async (urls) => {
     const response = await Promise.all(requests);
     
     return response.filter(article => article.text);
+}
+
+function filterMistakes(events) {
+    return events.filter(event => {
+        return !event.includes('\’') && !(event === '-');
+    });
 }
 
 const scrapeLinks = async () => {
