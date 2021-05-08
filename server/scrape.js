@@ -1,6 +1,7 @@
 const cheerio = require('cheerio');
 const pos = require('pos');
 const fetch = require('node-fetch');
+const constsModule = require('./consts.js');
 
 const scrapeNews = async (urls) => {
     const requests = urls
@@ -23,32 +24,9 @@ const scrapeNews = async (urls) => {
         const tagger = new pos.Tagger();
         const taggedWords = tagger.tag(words);
 
-        const NOUNS = {
-            NN: true,
-            NNP: true,
-            NNPS: true,
-            NNS: true
-        };
-
-        const VERBS = {
-            VB: true,
-            VBD: true,
-            VBG: true,
-            VBN: true,
-            VBP: true,
-            VBZ: true,
-        }
-
         for (let i = 0; i < taggedWords.length - 2; i++) {
-            const taggedWord = taggedWords[i];
-            const word = taggedWord[0];
-            const tag = taggedWord[1];
-                      
-            if(NOUNS[tag] && VERBS[taggedWords[i + 1][1]] && NOUNS[taggedWords[i + 2][1]]) {
-                if(word.length > 2 && taggedWords[i + 1][0].length > 2 && taggedWords[i + 2][0].length > 2) {
-                    events.push(`${word} ${taggedWords[i + 1][0]} ${taggedWords[i + 2][0]}`);
-                }
-            }
+            const newIndex = findEvent(taggedWords, i, events);
+            i = newIndex;
         }
 
             return {
@@ -65,9 +43,66 @@ const scrapeNews = async (urls) => {
     return response.filter(article => article.text);
 }
 
+function findEvent(taggedWords, i, events) {
+    const initialIndex = i;
+    const NOUNS = {
+        NN: true,
+        NNP: true,
+        NNPS: true,
+        NNS: true
+    };
+
+    const VERBS = {
+        VB: true,
+        VBD: true,
+        VBG: true,
+        VBN: true,
+        VBP: true,
+        VBZ: true,
+    }
+
+    if(taggedWords[i][1] === 'DT') {
+        i++;
+    }
+
+    if(NOUNS[taggedWords[i][1]] && taggedWords[i][0].length > 2) {
+        i++;
+    } else return initialIndex;
+
+    if(['has', 'have', 'had', 'was','were'].includes(taggedWords[i][0])) {
+        i++;
+    }
+
+    if(VERBS[taggedWords[i][1]] && taggedWords[i][0].length > 2) {
+        i++;
+    } else return initialIndex;
+
+    if(taggedWords[i][1] === 'IN') {
+        i++;
+    }
+
+    if(taggedWords[i][1] === 'DT') {
+        i++;
+    }
+
+    if(NOUNS[taggedWords[i][1]] && taggedWords[i][0].length > 2) {
+        i++;
+    } else return initialIndex;
+
+    events.push('');
+    for(let index = initialIndex; index < i; index++) {
+        events[events.length - 1] = (events[events.length - 1].concat(taggedWords[index][0] + ' ') + ' ');
+    }
+    events[events.length - 1] = events[events.length - 1].trim();
+
+    return i;
+
+}
+
 function filterMistakes(events) {
     return events.filter(event => {
-        return !event.includes('\’') && !(event === '-');
+        const words = event.split(' ');
+        return !event.match('.*[”’“-].*') && !words.some(word => constsModule.bannedWords.includes(word));
     });
 }
 
