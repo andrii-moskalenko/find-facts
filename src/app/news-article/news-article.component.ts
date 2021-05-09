@@ -25,9 +25,6 @@ export class NewsArticleComponent implements OnInit {
 
   private highlightEvents(article: INews) {
     let innerHtml = article.text;
-    console.log(article.events[0]);
-    console.log(innerHtml)
-    console.log(innerHtml.includes(article.events[0]));
     article.events.forEach(action =>
       innerHtml = innerHtml.replace(action, '<span class="highlight">' + action + '</span>')
     );
