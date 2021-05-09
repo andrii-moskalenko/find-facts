@@ -8,7 +8,7 @@ import { AppRoutingModule } from './app.routing';
 import { NewsListComponent } from './news-list/news-list.component';
 import { EventsListComponent } from './events-list/events-list.component';
 import { FormsModule } from '@angular/forms';
-import { CapitalizePipe } from './pipes/Capitalize.pipe';
+import { CapitalizePipe } from './pipes/capitalize.pipe';
 
 @NgModule({
   declarations: [
