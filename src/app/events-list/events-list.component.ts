@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
+import { map, tap } from 'rxjs/operators';
 import { INews } from '../app.consts';
 import { AppService } from '../app.service';
 
@@ -15,6 +16,7 @@ export class EventsListComponent implements OnInit {
   articles: Observable<INews[]>;
 
   events: Array<string>;
+  eventsMatches: any = {};
   eventsCache: Array<string>;
   fallback = this.appService.fallbackPicture;
 
@@ -22,6 +24,10 @@ export class EventsListComponent implements OnInit {
 
   ngOnInit(): void {
     this.appService.getEvents()
+      .pipe(
+        tap(events => events.forEach(event => this.eventsMatches[event] = this.eventsMatches[event] ?  this.eventsMatches[event] + 1 : 1)),
+        map(events => Array.from(new Set(events)))
+      )
       .subscribe(res => this.events = this.eventsCache = res);
   }
 
@@ -32,6 +38,7 @@ export class EventsListComponent implements OnInit {
   getNewsByEvent(event) {
     this.aciveItem = event;
     this.articles = this.appService.getNewsByEvent(event);
+    window.scroll(0, 0);
   }
 
 }

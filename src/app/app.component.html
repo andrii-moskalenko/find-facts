@@ -1,7 +1,7 @@
 <nav>
     <img  src="../assets/news.png" alt="">
-    <div class="link"><a routerLink="">News</a></div>
-    <div class="link"><a routerLink="events">Events</a></div>
+    <div routerLink="./" [routerLinkActiveOptions]= "{exact: true}"  routerLinkActive="active-link" class="link"><a >News</a></div>
+    <div routerLink="events" routerLinkActive="active-link" class="link"><a >Events</a></div>
     <div class="sources">
         <div class="title">Sources:</div>
         <div class="out-links">

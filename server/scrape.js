@@ -142,7 +142,7 @@ const scrapeTimeLinks = async () => {
 
     const url = 'https://time.com/section/politics';
     const requests = [];
-    for(let page = 1; page < 8; page++) {
+    for(let page = 1; page < 10; page++) {
         requests.push(fetch(
             `${url}/?page=${page}`,
             {
