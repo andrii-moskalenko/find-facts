@@ -14,6 +14,18 @@ nav {
         height: 70px;
         cursor: pointer;
         display: flex;
+
+        a {
+            text-decoration: none;
+            color: #01689b;
+            font-size: 25px;
+            display: inline-block;
+            width: 90px;
+            text-align: center;
+            padding: 5px 5px;
+            align-self: center;
+        }
+
         &:hover {
             background-color: #01689b;
             a {
@@ -21,14 +33,37 @@ nav {
             }
         }
     }
-    a {
-        text-decoration: none;
-        color: #01689b;
-        font-size: 25px;
-        display: inline-block;
-        width: 90px;
-        text-align: center;
-        padding: 5px 5px;
-        align-self: center;
+
+    .sources {
+        margin-left: 10%;
+        height: 70px;
+        display: flex;
+        .title {
+            text-decoration: none;
+            color: #000000;
+            font-size: 25px;
+            display: inline-block;
+            width: 90px;
+            text-align: center;
+            padding: 5px 5px;
+            align-self: center;
+        }
+
+        .out-links {
+            margin-left: 15px;
+            align-self: center;
+            .source {
+                display: block;
+                padding: 4px 0;
+                font-size: 19px;
+                text-decoration: none;
+                color: #707070;
+                cursor: pointer;
+                &:hover {
+                    color: #003b58;
+                    text-decoration: underline;
+                }
+            }
+        }
     }
 }

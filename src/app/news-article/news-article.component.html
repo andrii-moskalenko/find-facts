@@ -3,7 +3,7 @@
     <div class="img-wrapper">
         <img [src]="article.img" alt="">
     </div>
-    <div>{{article.text}}</div>
+    <div [innerHTML]="article.innerHtml" class="text"></div>
 
     <div class="news-events">
         <div class="events-label">Events:</div>
@@ -11,5 +11,6 @@
             {{ event | capitalize }}
         </div>
     </div>
+    <div class="date">{{ article.date | date }}</div>
 
 </article>

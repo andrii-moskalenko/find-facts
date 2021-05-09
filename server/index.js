@@ -89,16 +89,3 @@ function getArticle(req, data) {
   const queryParams = url.parse(req.url, true).query;
   return data.find(article => article.title.trim() === queryParams.title.trim());
 }
-
-// 1. getBBC
-// map news links, return text, title, id, source
-// 1. getCNN
-// map news links, return text, title, id, source
-
-// get events
-
-// set news api
-
-// set events api
-
-// set filter events api

@@ -4,6 +4,8 @@ export interface INews {
     id: string;
     img: string;
     events: Array<string>;
+    date: Date;
+    innerHtml?: string;
 }
 
 export interface IEvent {

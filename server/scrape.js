@@ -3,7 +3,7 @@ const pos = require('pos');
 const fetch = require('node-fetch');
 const constsModule = require('./consts.js');
 
-const scrapeNews = async (urls) => {
+const scrapeNbcNews = async (urls) => {
     const requests = urls
     .map(async url => {
           
@@ -28,12 +28,12 @@ const scrapeNews = async (urls) => {
             const newIndex = findEvent(taggedWords, i, events);
             i = newIndex;
         }
-
             return {
                 title: $('header h1').text(),
                 img: $('.article-hero__main img').attr('src'),
                 text,
-                events: filterMistakes(events)
+                events: filterMistakes(events),
+                date: new Date ($('.article-body time').text().split('/')[0])
             }
         });
           
@@ -89,11 +89,14 @@ function findEvent(taggedWords, i, events) {
         i++;
     } else return initialIndex;
 
-    events.push('');
+    let extractEvent = '';
     for(let index = initialIndex; index < i; index++) {
-        events[events.length - 1] = (events[events.length - 1].concat(taggedWords[index][0] + ' ') + ' ');
+        extractEvent = extractEvent.concat(taggedWords[index][0]) + ' ';
     }
-    events[events.length - 1] = events[events.length - 1].trim();
+    extractEvent = extractEvent.trim();
+    if(!events.includes(extractEvent)) {
+        events.push(extractEvent)
+    }
 
     return i;
 
@@ -102,11 +105,11 @@ function findEvent(taggedWords, i, events) {
 function filterMistakes(events) {
     return events.filter(event => {
         const words = event.split(' ');
-        return !event.match('.*[”’“-].*') && !words.some(word => constsModule.bannedWords.includes(word));
+        return !event.match('.*[—”’_“-].*') && !words.some(word => constsModule.bannedWords.includes(word));
     });
 }
 
-const scrapeLinks = async () => {
+const scrapeNbcLinks = async () => {
 
 
     const url = 'https://www.nbcnews.com/politics';
@@ -134,6 +137,89 @@ const scrapeLinks = async () => {
     return links;
 }
 
+const scrapeTimeLinks = async () => {
+    
+
+    const url = 'https://time.com/section/politics';
+    const requests = [];
+    for(let page = 1; page < 8; page++) {
+        requests.push(fetch(
+            `${url}/?page=${page}`,
+            {
+                method: 'get',
+                headers: { 
+                'Content-Type': 'text/plain; charset=windows-1252',
+                },
+            })
+        )
+    }
+
+    const pageData = await Promise.all(requests);
+    const links = [];
+
+    for(let page of pageData) {
+        const html = await page.text();
+        const $ = cheerio.load(html);
+
+        $('.heading-3 > a')
+        .each((i, item) => {
+            links.push('https://time.com' + $(item).attr('href'));
+        });
+    }
+
+    return links;
+}
+
+const scrapeTimeNews = async (urls) => {
+    const requests = urls
+    .map(async url => {
+          
+        const res = await fetch(url, {
+            method: 'get',
+            headers: { 
+                        'Content-Type': 'text/plain; charset=windows-1252',
+            },
+        });
+                
+        const html = await res.text();
+        const $ = cheerio.load(html);
+
+        const text = $('.padded > p').text();
+        const events = [];
+
+        const words = new pos.Lexer().lex(text);
+        const tagger = new pos.Tagger();
+        const taggedWords = tagger.tag(words);
+
+        for (let i = 0; i < taggedWords.length - 2; i++) {
+            const newIndex = findEvent(taggedWords, i, events);
+            i = newIndex;
+        }
+
+            return {
+                title: $('.article-info .headline').text(),
+                img: $('.image-and-burst img').attr('src'),
+                text,
+                date: new Date($('.published-date').text().split('|')[0].trim()),
+                events: filterMistakes(events)
+            }
+        });
+          
+          
+    const response = await Promise.all(requests);
+    
+    return response.filter(article => article.text);
+}
+
+const scrapeLinks = async () => {
+    links = await Promise.all([scrapeTimeLinks(), scrapeNbcLinks()]);
+    return links;
+}
+
+const scrapeNews = async (links) => {
+    news = await Promise.all([scrapeTimeNews(links[0]), scrapeNbcNews(links[1])]);
+    return news[0].concat(news[1]);
+}
 
 module.exports = {
     scrapeLinks: scrapeLinks,
