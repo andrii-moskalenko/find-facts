@@ -142,7 +142,7 @@ const scrapeTimeLinks = async () => {
 
     const url = 'https://time.com/section/politics';
     const requests = [];
-    for(let page = 1; page < 10; page++) {
+    for(let page = 1; page < 30; page++) {
         requests.push(fetch(
             `${url}/?page=${page}`,
             {
@@ -218,7 +218,7 @@ const scrapeLinks = async () => {
 
 const scrapeNews = async (links) => {
     news = await Promise.all([scrapeTimeNews(links[0]), scrapeNbcNews(links[1])]);
-    return news[0].concat(news[1]);
+    return news[1].concat(news[0]).splice(0, 200);
 }
 
 module.exports = {
