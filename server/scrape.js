@@ -99,7 +99,6 @@ function findEvent(taggedWords, i, events) {
     }
 
     return i;
-
 }
 
 function filterMistakes(events) {
@@ -111,11 +110,8 @@ function filterMistakes(events) {
 
 const scrapeNbcLinks = async () => {
 
-
     const url = 'https://www.nbcnews.com/politics';
 
-
-          
     const res = await fetch(url, {
         method: 'get',
         headers: { 
@@ -139,7 +135,6 @@ const scrapeNbcLinks = async () => {
 
 const scrapeTimeLinks = async () => {
     
-
     const url = 'https://time.com/section/politics';
     const requests = [];
     for(let page = 1; page < 30; page++) {
