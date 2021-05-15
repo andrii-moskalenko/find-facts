@@ -108,11 +108,11 @@ function filterMistakes(events) {
     });
 }
 
-const scrapeNbcLinks = async () => {
+const scrapeNbcLinks = async () => { // функція зчитування посилань на статті NBS NEWS
 
     const url = 'https://www.nbcnews.com/politics';
 
-    const res = await fetch(url, {
+    const result = await fetch(url, {
         method: 'get',
         headers: { 
         'Content-Type': 'text/plain; charset=windows-1252',
@@ -120,10 +120,12 @@ const scrapeNbcLinks = async () => {
         },
     });
 
-    const html = await res.text();
-    const $ = cheerio.load(html);
+    const html = await result.text();
+    const $ = cheerio.load(html); // передаємо html сторінку зі списком новин, та посилань на веб-сторінки зі статтями
+                                  // для зчитування інформації, яку містить сторінка
+
     const links = [];
-    const getLinks = () => {
+    const getLinks = () => { // функція для зчитування посилань на статті і збереження їх у масив
         return $('.feeds__items-wrapper > .wide-tease-item__wrapper > a')
         .each((i, item) => {
             links.push($(item).attr('href'));
@@ -133,11 +135,11 @@ const scrapeNbcLinks = async () => {
     return links;
 }
 
-const scrapeTimeLinks = async () => {
+const scrapeTimeLinks = async () => { // функція зчитування посилань на статті TIME, за тим же принципом 
     
     const url = 'https://time.com/section/politics';
     const requests = [];
-    for(let page = 1; page < 30; page++) {
+    for(let page = 1; page < 30; page++) { // зчитуємо посилання на новини з 30 сторінок
         requests.push(fetch(
             `${url}/?page=${page}`,
             {
