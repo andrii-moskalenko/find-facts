@@ -8,4 +8,4 @@ Navigate to `http://localhost:4200/`.
 
 ## Further help
 
-Pathetic app deployed at https://find-facts.herokuapp.com/
+Pathetic app deployed at https://find-facts.herokuapp.com/. Loads content loads for around 15 seconds for the first time.
